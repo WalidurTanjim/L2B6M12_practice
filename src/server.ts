@@ -291,6 +291,39 @@ app.post("/todos", async(req: Request, res: Response) => {
     }
 })
 
+app.put("/todos/:id", async(req: Request, res: Response) => {
+    const { id } = req?.params;
+    const { user_id, title, description } = req?.body;
+
+    try{
+        const result = await pool.query(`UPDATE todos SET user_id=$1, title=$2, description=$3 WHERE id = $4 RETURNING *`, [user_id, title, description, id]);
+
+        // console.log("Updated todo:", result?.rows);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false,
+                message: "There Are No Todo Available",
+                data: result?.rows
+            })
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "Todo Updated Successfully",
+                data: result?.rows
+            })
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        })
+    }
+})
+
 
 
 app.listen(port, () => {
