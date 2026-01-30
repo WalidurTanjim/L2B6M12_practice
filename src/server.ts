@@ -46,6 +46,28 @@ app.get("/", (req: Request, res: Response) => {
     res.send("Express server with TypeScript, PostgreSQL, NeonDB!");
 })
 
+// users table API routes
+app.get("/users", async(req: Request, res: Response) => {
+    // const { name, email, age, phone, address } = req?.body;
+    try{
+        const result = await pool.query(`SELECT * FROM users`);
+        
+        res.status(200).json({
+            success: true,
+            message: "Users Fetched Successfully",
+            data: result?.rows
+        });
+    }catch(err: any){
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        });
+    }
+})
+
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
 })
