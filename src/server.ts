@@ -197,6 +197,39 @@ app.delete("/users/:id", async(req: Request, res: Response) => {
     }
 })
 
+
+
+// todos table API route 
+app.get("/todos", async(req: Request, res: Response) => {
+    try{
+        const result = await pool.query(`SELECT * FROM todos`);
+        
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false,
+                message: "There Are Now Todos Available",
+                data: result?.rows
+            });
+        }else{
+            res.status(200).json({
+            success: true,
+            message: "All Todos Fetched Succssfully",
+            data: result?.rows
+        });
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        });
+    }
+})
+
+
+
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
 })
