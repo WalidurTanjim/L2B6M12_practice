@@ -228,6 +228,38 @@ app.get("/todos", async(req: Request, res: Response) => {
     }
 })
 
+app.get("/todos/:id", async(req: Request, res: Response) => {
+    const { id } = req?.params;
+
+    try{
+        const result = await pool.query(`SELECT * FROM todos WHERE id = $1`, [id]);
+
+        // console.log("Single todo:", result.rows);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false,
+                message: "There Are Now Todos Available",
+                data: result?.rows
+            });
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "Single Todos Fetched Succssfully",
+                data: result?.rows
+            });
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        })
+    }
+})
+
 app.post("/todos", async(req: Request, res: Response) => {
     const { user_id, title, description } = req?.body;
 
