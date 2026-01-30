@@ -324,6 +324,38 @@ app.put("/todos/:id", async(req: Request, res: Response) => {
     }
 })
 
+app.delete("/todos/:id", async(req: Request, res: Response) => {
+    const { id } = req?.params;
+
+    try{
+        const result = await pool.query(`DELETE FROM todos WHERE id = $1`, [id]);
+
+        // console.log("Delete todo:", result?.rowCount);
+
+        if(result?.rowCount === 0){
+            res.status(400).json({
+                success: false,
+                message: "Todo Not Found!",
+                data: result?.rowCount
+            })
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "Todo Deleted Successfully",
+                data: result?.rowCount
+            })
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        })
+    }
+})
+
 
 
 app.listen(port, () => {
