@@ -228,6 +228,37 @@ app.get("/todos", async(req: Request, res: Response) => {
     }
 })
 
+app.post("/todos", async(req: Request, res: Response) => {
+    const { user_id, title, description } = req?.body;
+
+    try{
+        const result = await pool.query(`INSERT INTO todos(user_id, title, description) VALUES($1, $2, $3) RETURNING *`, [user_id, title, description]);
+
+        // console.log("Insert todo:", result?.rows[0]);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false,
+                message: "Insert Failed"
+            })
+        }else{
+            res.status(201).json({
+                success: true,
+                message: "Todo Inserted Successfully",
+                data: result?.rows[0]
+            })
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false, 
+            message: err?.message,
+            details: err
+        });
+    }
+})
+
 
 
 app.listen(port, () => {
