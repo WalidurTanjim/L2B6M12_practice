@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import config from "./config";
 import initDB, { pool } from "./config/db";
 
@@ -11,8 +11,14 @@ app.use(express.json());
 // Initialize database
 initDB();
 
+// logger middleware
+const logger = (req: Request, res: Response, next: NextFunction) => {
+    console.log(`[${new Date().toISOString()}] ${req?.method} ${req?.path}\n`);
+    next();
+}
+
 // API routes starts
-app.get("/", (req: Request, res: Response) => {
+app.get("/", logger, (req: Request, res: Response) => {
     res.send("Express server with TypeScript, PostgreSQL, NeonDB!");
 })
 
