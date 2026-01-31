@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import config from "./config";
 import initDB, { pool } from "./config/db";
 import logger from "./middleware/logger";
+import { userRoutes } from "./modules/user/user.routes";
 
 const app = express();
 const port = config?.port;
@@ -19,35 +20,6 @@ app.get("/", logger, (req: Request, res: Response) => {
 })
 
 // users table API routes
-app.get("/users", async(req: Request, res: Response) => {
-    // const { name, email, age, phone, address } = req?.body;
-    try{
-        const result = await pool.query(`SELECT * FROM users`);
-        
-        if(result?.rows.length === 0){
-            res.status(400).json({
-                success: false, 
-                message: "There Are No User Found!",
-                data: result?.rows
-            })
-        }else{
-            res.status(200).json({
-                success: true,
-                message: "Users Fetched Successfully",
-                data: result?.rows
-            });
-        }
-    }catch(err: any){
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            message: err?.message,
-            details: err
-        });
-    }
-})
-
 app.get("/users/:id", async(req: Request, res: Response) => {
     const { id } = req?.params;
     
@@ -78,28 +50,7 @@ app.get("/users/:id", async(req: Request, res: Response) => {
     }
 })
 
-app.post("/users", async(req: Request, res: Response) => {
-    const { name, email, age, phone, address } = req?.body;
-
-    try{
-        const result = await pool.query(`INSERT INTO users(name, email, age, phone, address) VALUES($1, $2, $3, $4, $5) RETURNING *`, [name, email, age, phone, address]);
-        // console.log("Inserted user:", result?.rows[0]);
-
-        res.status(201).json({
-            success: true,
-            message: "User Inserted Successfully",
-            data: result?.rows[0]
-        });
-    }catch(err: any){
-        console.error(err);
-
-        res.status(500).json({
-            success: false, 
-            message: err?.message,
-            details: err
-        });
-    }
-})
+app.use("/users", userRoutes);
 
 app.put("/users/:id", async(req: Request, res: Response) => {
     const { id } = req?.params;
