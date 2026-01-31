@@ -20,8 +20,16 @@ const createUser = async(name: string, email: string, age: number, phone: string
     return result;
 }
 
+// update user (put method)
+const updateUser = async(name: string, email: string, age: number, phone: string, address: string, id: string) => {
+    const result = await pool.query(`UPDATE users SET name=$1, email=$2, age=$3, phone=$4, address=$5 WHERE id = $6 RETURNING *`, [name, email, age, phone, address, id]);
+
+    return result;
+}
+
 export const userServices = {
     getAllUsers,
     getSingleUser,
-    createUser
+    createUser,
+    updateUser
 };

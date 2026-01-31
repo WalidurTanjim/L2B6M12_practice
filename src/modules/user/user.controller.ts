@@ -88,8 +88,42 @@ const createUser = async(req: Request, res: Response) => {
     }
 }
 
+// update user by id (put method)
+const updateUser = async(req: Request, res: Response) => {
+    const { id } = req?.params;
+    const { name, email, age, phone, address } = req?.body;
+
+    try{
+        const result = await userServices?.updateUser(name, email, age, phone, address, id as string);
+
+        // console.log("Updated user:", result?.rows);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false, 
+                message: "User Not Found"
+            });
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "User Updated Successfully",
+                data: result?.rows
+            });
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        });
+    }
+}
+
 export const userControllers = {
     getAllUsers,
     getSingleUser,
-    createUser
+    createUser,
+    updateUser
 };
