@@ -66,10 +66,11 @@ const getSingleUser = async(req: Request, res: Response) => {
 
 // create user (post method)
 const createUser = async(req: Request, res: Response) => {
-    const { name, email, age, phone, address } = req?.body;
+    // const { name, email, age, phone, address } = req?.body;
 
     try{
-        const result = await userServices?.createUser(name, email, age, phone, address);
+        // const result = await userServices?.createUser(name, email, age, phone, address);
+        const result = await userServices?.createUser(req?.body);
         // console.log("Inserted user:", result?.rows[0]);
 
         res.status(201).json({

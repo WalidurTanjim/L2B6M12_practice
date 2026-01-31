@@ -14,7 +14,14 @@ const getSingleUser = async(id: string) => {
 }
 
 // create user (post method)
-const createUser = async(name: string, email: string, age: number, phone: string, address: string) => {
+// const createUser = async(name: string, email: string, age: number, phone: string, address: string) => {
+//     const result = await pool.query(`INSERT INTO users(name, email, age, phone, address) VALUES($1, $2, $3, $4, $5) RETURNING *`, [name, email, age, phone, address]);
+    
+//     return result;
+// }
+const createUser = async(payload: Record<string, unknown>) => {
+    const { name, email, age, phone, address } = payload;
+
     const result = await pool.query(`INSERT INTO users(name, email, age, phone, address) VALUES($1, $2, $3, $4, $5) RETURNING *`, [name, email, age, phone, address]);
     
     return result;
