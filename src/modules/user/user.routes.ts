@@ -91,4 +91,36 @@ router.post("/", async(req: Request, res: Response) => {
     }
 });
 
+router.put("/:id", async(req: Request, res: Response) => {
+    const { id } = req?.params;
+    const { name, email, age, phone, address } = req?.body;
+
+    try{
+        const result = await pool.query(`UPDATE users SET name=$1, email=$2, age=$3, phone=$4, address=$5 WHERE id = $6 RETURNING *`, [name, email, age, phone, address, id]);
+
+        // console.log("Updated user:", result?.rows);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false, 
+                message: "User Not Found"
+            });
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "User Updated Successfully",
+                data: result?.rows
+            });
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        });
+    }
+})
+
 export const userRoutes = router;
