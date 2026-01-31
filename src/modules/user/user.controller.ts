@@ -32,7 +32,7 @@ const getAllUsers = async(req: Request, res: Response) => {
     }
 }
 
-// get single user (get method)
+// get single user by id (get method)
 const getSingleUser = async(req: Request, res: Response) => {
     const { id } = req?.params;
     // console.log("Single user id:", id, typeof id)
@@ -121,9 +121,42 @@ const updateUser = async(req: Request, res: Response) => {
     }
 }
 
+// delete user by id (delete method)
+const deleteUser = async(req: Request, res: Response) => {
+    const { id } = req?.params;
+
+    try{
+        const result = await userServices?.deleteUser(id as string);
+        
+        // console.log("✔ User Deleted Successfully!", result?.rowCount);
+
+        if(result?.rowCount === 0){
+            res.status(400).json({
+                success: false, 
+                message: "User Now Found!"
+            });
+        }else{
+            res.status(200).json({
+                success: true, 
+                message: "✔ User Deleted Successfully.",
+                data: result?.rowCount
+            });
+        }
+    }catch(err: any){
+        console.error(err?.message);
+
+        res.status(500).json({
+            success: false,
+            message: "User Not Found!",
+            details: err
+        });
+    }
+}
+
 export const userControllers = {
     getAllUsers,
     getSingleUser,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 };

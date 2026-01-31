@@ -7,7 +7,7 @@ const getAllUsers = async() => {
     return result;
 }
 
-// get single user (get method)
+// get single user by id (get method)
 const getSingleUser = async(id: string) => {
     const result = await pool.query(`SELECT * FROM users WHERE id = $1`,[id]);
     return result;
@@ -20,9 +20,16 @@ const createUser = async(name: string, email: string, age: number, phone: string
     return result;
 }
 
-// update user (put method)
+// update user by id (put method)
 const updateUser = async(name: string, email: string, age: number, phone: string, address: string, id: string) => {
     const result = await pool.query(`UPDATE users SET name=$1, email=$2, age=$3, phone=$4, address=$5 WHERE id = $6 RETURNING *`, [name, email, age, phone, address, id]);
+
+    return result;
+}
+
+// delete user by id (delete method)
+const deleteUser = async(id: string) => {
+    const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
 
     return result;
 }
@@ -31,5 +38,6 @@ export const userServices = {
     getAllUsers,
     getSingleUser,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 };
