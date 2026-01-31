@@ -9,6 +9,7 @@ const router = express.Router();
 
 // routes => controller => service
 
+// get all users
 router.get("/", async(req: Request, res: Response) => {
     // const { name, email, age, phone, address } = req?.body;
     try{
@@ -38,6 +39,7 @@ router.get("/", async(req: Request, res: Response) => {
     }
 });
 
+// get single users by id
 router.get("/:id", async(req: Request, res: Response) => {
     const { id } = req?.params;
     
@@ -68,6 +70,7 @@ router.get("/:id", async(req: Request, res: Response) => {
     }
 });
 
+// post single user
 router.post("/", async(req: Request, res: Response) => {
     const { name, email, age, phone, address } = req?.body;
 
@@ -91,6 +94,7 @@ router.post("/", async(req: Request, res: Response) => {
     }
 });
 
+// update user by id
 router.put("/:id", async(req: Request, res: Response) => {
     const { id } = req?.params;
     const { name, email, age, phone, address } = req?.body;
@@ -123,6 +127,7 @@ router.put("/:id", async(req: Request, res: Response) => {
     }
 });
 
+// delete single user by id
 router.delete("/:id", async(req: Request, res: Response) => {
     const { id } = req?.params;
 
