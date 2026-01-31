@@ -11,34 +11,7 @@ const router = express.Router();
 // routes => controller => service
 
 // get all users
-router.get("/", async(req: Request, res: Response) => {
-    // const { name, email, age, phone, address } = req?.body;
-    try{
-        const result = await pool.query(`SELECT * FROM users`);
-        
-        if(result?.rows.length === 0){
-            res.status(400).json({
-                success: false, 
-                message: "There Are No User Found!",
-                data: result?.rows
-            })
-        }else{
-            res.status(200).json({
-                success: true,
-                message: "Users Fetched Successfully",
-                data: result?.rows
-            });
-        }
-    }catch(err: any){
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            message: err?.message,
-            details: err
-        });
-    }
-});
+router.get("/", userControllers?.getAllUsers);
 
 // get single users by id
 router.get("/:id", async(req: Request, res: Response) => {
