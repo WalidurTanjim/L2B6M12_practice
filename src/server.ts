@@ -1,18 +1,16 @@
 import express, { Request, Response } from "express";
 import { Pool } from "pg";
-import path from "path";
-import dotenv from "dotenv"
+import config from "./config";
 
-dotenv.config({ path: path.join(process.cwd(), ".env") });
 const app = express();
-const port = 5500;
+const port = config?.port;
 
 // parser
 app.use(express.json());
 
 // Database
 const pool = new Pool({
-    connectionString: `${process.env.CONNECTION_STRING}`
+    connectionString: `${config?.connection_string}`
 });
 
 const initDB = async() => {
