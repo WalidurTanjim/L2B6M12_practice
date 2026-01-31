@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import config from "./config";
 import initDB, { pool } from "./config/db";
+import logger from "./middleware/logger";
 
 const app = express();
 const port = config?.port;
@@ -11,11 +12,6 @@ app.use(express.json());
 // Initialize database
 initDB();
 
-// logger middleware
-const logger = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`[${new Date().toISOString()}] ${req?.method} ${req?.path}\n`);
-    next();
-}
 
 // API routes starts
 app.get("/", logger, (req: Request, res: Response) => {
