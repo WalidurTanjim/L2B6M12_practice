@@ -38,6 +38,36 @@ router.get("/", async(req: Request, res: Response) => {
     }
 });
 
+router.get("/:id", async(req: Request, res: Response) => {
+    const { id } = req?.params;
+    
+    try{
+        const result = await pool.query(`SELECT * FROM users WHERE id = $1`,[id]);
+        // console.log("Single user by id:", result.rows[0]);
+
+        if(result?.rows.length === 0){
+            res.status(400).json({
+                success: false,
+                message: "User Not Found!"
+            });
+        }else{
+            res.status(200).json({
+                success: true,
+                message: "User Fetched Successfully",
+                data: result?.rows[0]
+            });
+        }
+    }catch(err: any){
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            message: err?.message,
+            details: err
+        });
+    }
+});
+
 router.post("/", async(req: Request, res: Response) => {
     const { name, email, age, phone, address } = req?.body;
 
