@@ -3,6 +3,7 @@
 
 import express from "express";
 import { userControllers } from "./user.controller";
+import auth from "../../middleware/auth";
 const router = express.Router();
 
 // app.use("/users", userRoutes);
@@ -10,7 +11,7 @@ const router = express.Router();
 // routes => controller => service
 
 // get all users
-router.get("/", userControllers?.getAllUsers);
+router.get("/", auth(), userControllers?.getAllUsers);
 
 // get single users by id
 router.get("/:id", userControllers?.getSingleUser);
